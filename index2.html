@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wenqi Zeng | Health Data Scientist</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #FDFBFF;           /* 明亮珍珠白 */
+            --accent-blue: #60A5FA;  /* 冰晶蓝 */
+            --accent-pink: #FBCFE8;  /* 柔和淡粉 */
+            --text-main: #1F2937;    /* 深岩灰 */
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(96, 165, 250, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, #FDFBFF 0%, #F0F9FF 30%, #FDF2F8 70%, #FDFBFF 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+
+        /* 亮色玻璃拟态 */
+        .glass-bright {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(96, 165, 250, 0.1);
+            transition: all 0.4s ease;
+        }
+        .glass-bright:hover {
+            border-color: #F472B6; /* 悬停变为粉色边框 */
+            transform: translateY(-5px);
+        }
+
+        /* 渐变文字：蓝到粉 */
+        .text-gradient {
+            background: linear-gradient(135deg, #60A5FA 0%, #F472B6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 背景装饰球 */
+        .blob {
+            position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <nav class="fixed top-0 w-full z-40 p-8 flex justify-between items-center">
+            <div class="font-bold text-xl tracking-tighter text-blue-600">WZ.</div>
+            <div class="hidden md:flex gap-10 text-xs uppercase tracking-widest font-semibold">
+                <a href="#about" class="hover:text-pink-500 transition-colors">Expertise</a>
+                <a href="#experience" class="hover:text-pink-500 transition-colors">Career</a>
+                <a href="#projects" class="hover:text-pink-500 transition-colors">Projects</a>
+            </div>
+        </nav>
+
+        <section class="min-h-screen flex items-center justify-center px-6 md:px-20 relative overflow-hidden">
+            <div class="blob w-96 h-96 bg-blue-100 top-[-10%] left-[-10%] animate-pulse"></div>
+            <div class="blob w-80 h-80 bg-pink-100 bottom-[10%] right-[5%]"></div>
+
+            <div class="grid md:grid-cols-2 gap-10 items-center w-full max-w-6xl mx-auto">
+                <div class="z-12">
+                    <p class="text-blue-500 font-bold tracking-[0.4em] mb-4 hero-anim opacity-0">
+                        {{ profileData.title }}
+                    </p>
+                    <h1 class="text-6xl md:text-[7rem] font-bold leading-none tracking-tighter mb-8">
+                        <span class="block hero-anim opacity-0">{{ profileData.firstName }}</span>
+                        <span class="block text-gradient font-serif italic hero-anim opacity-0">{{ profileData.lastName }}</span>
+                    </h1>
+                    <p class="text-lg text-gray-500 max-w-md mb-10 hero-anim opacity-0">
+                        {{ profileData.heroBio }}
+                    </p>
+                    <div class="flex gap-6 hero-anim opacity-0">
+                        <a href="mailto:wenqizeng@hsph.harvard.edu" class="px-8 py-4 bg-blue-600 text-white rounded-full font-bold shadow-lg shadow-blue-200 hover:bg-pink-500 hover:shadow-pink-200 transition-all">Say Hello</a>
+                        <a :href="profileData.links.linkedin" target="_blank" class="px-10 py-4 border-2 border-blue-100 rounded-full font-bold hover:bg-blue-50 transition-all">LinkedIn</a>
+                    </div>
+                </div>
+
+                <div class="relative flex justify-center items-center hero-anim opacity-0 md:ml-8">
+                    <div class="w-72 h-96 md:w-[400px] md:h-[550px] relative">
+                        <div class="absolute inset-0 bg-pink-200 rounded-[3rem] rotate-3 -z-10"></div>
+                        <img :src="profileData.avatarUrl" class="w-full h-full object-cover rounded-[3rem] shadow-2xl border-4 border-white" alt="Wenqi Zeng">
+                        <div class="absolute -bottom-6 -left-6 glass-bright p-6 rounded-2xl">
+                            <p class="text-xs font-bold text-blue-600 uppercase">Current Status</p>
+                            <p class="text-lg font-bold">Harvard Graduate Student</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-16 px-6 md:px-20 bg-white/50">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="lg:col-span-2 glass-bright p-8 rounded-[2.5rem] flex flex-col justify-center">
+                    <h3 class="text-pink-500 font-bold text-sm uppercase mb-3 tracking-widest">THE PROFILE</h3>
+                    <p class="text-xl font-semibold leading-snug">{{ profileData.fullBio }}</p>
+                </div>
+                
+                <div class="glass-bright p-6 rounded-[2.5rem] flex flex-col justify-between group">
+                    <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center text-4xl">
+                        🎓
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs font-bold uppercase mb-1">CURRENT</p>
+                        <h4 class="font-bold text-lg mb-1">Harvard University</h4>
+                        <p class="text-gray-500 text-sm mb-1">MS Health Data Science</p>
+                        <p class="text-2xl font-black text-blue-600">GPA 4.0</p>
+                    </div>
+                </div>
+
+                <div class="glass-bright p-6 rounded-[2.5rem] flex flex-col justify-between">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-4xl">
+                        🏛️
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-1">UIUC</h4>
+                        <p class="text-gray-500 text-sm mb-2">B.S. STATS & ECON</p>
+                        <p class="text-xl text-pink-500 font-bold uppercase">Highest Distinction</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                <div class="md:col-span-3 glass-bright p-6 rounded-[2.5rem] flex flex-col">
+                    <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 mb-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs font-bold uppercase mb-1">LOCATION</p>
+                        <h4 class="font-bold text-base">Boston, MA</h4>
+                    </div>
+                </div>
+
+                <div class="md:col-span-9 glass-bright p-6 rounded-[2.5rem] flex flex-col">
+                    <p class="text-gray-500 text-xs font-bold uppercase mb-3">SKILLS</p>
+                    <div class="flex flex-wrap gap-3">
+                        <span v-for="skill in profileData.skills" class="px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-bold hover:bg-blue-100 transition-colors">
+                            {{ skill }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-32 px-6 md:px-20 max-w-7xl mx-auto">
+            <div class="flex justify-between items-end mb-20">
+                <h3 class="text-5xl font-bold tracking-tighter">Career <span class="text-blue-500">Path</span></h3>
+                <p class="text-gray-400 font-bold uppercase text-xs tracking-widest"> 2022— 2026</p>
+            </div>
+            
+            <div class="space-y-6">
+                <div v-for="(exp, index) in profileData.experience" :key="index" class="glass-bright p-10 rounded-[2.5rem] flex flex-col md:flex-row justify-between hover:bg-blue-50/50">
+                    <div class="md:w-1/3 mb-6 md:mb-0">
+                        <p class="text-pink-500 font-bold text-sm mb-2">{{ exp.period }}</p>
+                        <h4 class="text-3xl font-bold">{{ exp.company }}</h4>
+                    </div>
+                    <div class="md:w-2/3">
+                        <p class="text-blue-600 font-bold text-lg mb-4 uppercase tracking-wide">{{ exp.role }}</p>
+                        <ul class="space-y-3">
+                            <li v-for="item in exp.details" class="text-gray-600 flex gap-3 text-sm leading-relaxed">
+                                <span class="text-blue-300">✦</span> {{ item }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects"class="py-12 px-6 bg-pink-100 rounded-[4rem] max-w-[1300px] mx-auto my-12">
+
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span class="bg-pink-300 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-pink-800">Feature Project</span>
+                    <h3 class="text-5xl font-bold mt-6 mb-8 text-gray-800">InfluencerLens</h3>
+                    <p class="text-gray-600 text-lg mb-10 leading-relaxed">
+                        An influencer discovery platform built on a multimodal RAG stack, combining Neo4j graph retrieval with BM25/vector hybrid search, fusion, and reranking, and served via APIs for scalable deployment.
+                    </p>
+                    <div class="flex gap-3">
+                        <a :href="profileData.links.medium" target="_blank" class="px-6 py-3 bg-pink-500 text-white rounded-full font-bold hover:bg-pink-600 hover:shadow-pink-200 shadow-lg transition-all text-sm whitespace-nowrap">GitHub</a>
+                        <a :href="profileData.links.github" target="_blank" class="px-6 py-3 bg-pink-300 text-pink-800 rounded-full font-bold hover:bg-pink-400 hover:shadow-pink-200 shadow-lg transition-all text-sm whitespace-nowrap">Introduction Blog</a>
+                        <a :href="profileData.links.youtube" target="_blank" class="px-6 py-3 border-2 border-pink-300 text-pink-600 rounded-full font-bold hover:bg-pink-50 transition-all text-sm whitespace-nowrap">Demo Video</a>
+                    </div>
+                </div>
+                <div>
+                    <div class="relative group mb-8">
+                        <div class="absolute inset-0 bg-pink-300 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                        <img src="https://raw.githubusercontent.com/wenqiz359/images/main/Picture1.png" class="w-full h-auto rounded-3xl shadow-2xl relative z-10 scale-110" alt="RAG Platform">
+                    </div>
+                    <div class="relative group mt-4">
+                        <div class="absolute inset-0 bg-pink-300 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                        <img src="https://raw.githubusercontent.com/wenqiz359/images/main/ui_resultspage%20.png" class="w-full h-auto rounded-3xl shadow-2xl relative z-10 scale-110" alt="UI Results Page">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-32 px-6 text-center">
+            <p class="text-gray-400 font-bold uppercase tracking-[0.5em] mb-10">Get in Touch</p>
+            <a :href="'mailto:' + profileData.contact.email" class="text-2xl md:text-5xl font-bold text-blue-600 hover:text-pink-500 transition-colors">
+                {{ profileData.contact.email }}
+            </a>
+            <div class="mt-20 flex justify-center gap-10">
+                <a :href="profileData.links.linkedin" target="_blank" class="font-bold text-gray-400 hover:text-blue-500 transition-colors">LinkedIn</a>
+                <a href="找工/WenqiZeng_CV_2026_ml.pdf" download="WenqiZeng_CV_2026_ml.pdf" class="font-bold text-gray-400 hover:text-blue-500 transition-colors">Resume PDF</a>
+            </div>
+            <p class="mt-20 text-xs text-gray-300 font-bold uppercase tracking-widest">© 2026 Wenqi Zeng • Boston, MA</p>
+        </footer>
+    </div>
+
+    <script>
+  const profileData = {
+  firstName: "WENQI",
+  lastName: "ZENG",
+
+  // 更贴近 MLE/AI Engineer 的 headline：系统、部署、LLM
+  title: "ML / AI ENGINEER • GENAI (RAG) • MLOPS • PRODUCTION SYSTEMS",
+
+  location: "Boston, MA",
+  avatarUrl: "https://raw.githubusercontent.com/wenqiz359/images/main/portrait.JPG",
+
+  // Hero：从“analytics系统”更偏工程化/落地
+  heroBio:
+    "Building and ship ML + GenAI systems—training & evaluation pipelines, RAG retrieval stacks, and production services with monitoring, performance tuning, and scalable deployment.",
+
+  // About：更短、更像 JD summary（工程导向 + 公司背书）
+  fullBio:
+    "Harvard MS in Health Data Science. ML/AI Engineer focused on production ML, GenAI (RAG), and MLOps—deployment, monitoring, and performance optimization across TikTok, Mayo Clinic, and Tencent.",
+
+  contact: { email: "wenqizeng@hsph.harvard.edu" },
+
+  links: {
+    linkedin: "https://www.linkedin.com/in/wenqi-zeng947/",
+    medium:
+      "https://medium.com/institute-for-applied-computational-science/influencerlens-an-ai-powered-platform-for-smarter-influencer-discovery-fe4fe1b686ba",
+    youtube: "https://www.youtube.com/watch?v=WhQ4s5-x2bM",
+    github: "https://github.com/wenqiz359/InfluencerLens"
+  },
+
+  // Skills：把“AI Engineer 招聘更关心的栈”放前面（RAG/MLOps/Deploy/Serving/Cloud）
+  skills: [
+    "PyTorch / TensorFlow",
+    "LLM Apps (RAG, Embeddings, Rerank)",
+    "Retrieval (BM25 + Vector, RRF)",
+    "Evaluation & Monitoring (Quality/Drift)",
+    "Model Serving (FastAPI, Docker)",
+    "Kubernetes (GKE)",
+    "Data Pipelines (Spark / PySpark)",
+    "SQL (CTE, Window Functions)",
+    "Time Series (LightGBM, Prophet)",
+    "CI/CD & Versioning (Git)",
+    "Cloud (GCP / AWS)",
+    "System Performance (Latency / Cost)"
+  ],
+
+  experience: [
+    {
+      period: "09/2025 - 12/2025",
+      company: "Mayo Clinic",
+      role: "Machine Learning & AI Intern",
+      details: [
+        "Built probabilistic sequence models (HMM) to learn diagnostic test trajectories and predict neuropathology outcomes from historical expert data.",
+        "Developed a decision-support prototype using POMDP + information gain to recommend next-best tests and improve test selection efficiency.",
+        "Implemented LLM-based feature extraction to derive semantic test attributes and integrated features into the system’s core decision logic."
+      ]
+    },
+    {
+      period: "05/2025 - 08/2025",
+      company: "TikTok",
+      role: "Data Science Intern",
+      details: [
+        "Designed experiment measurement and analysis for LIVE strategy evaluation (A/B + AA), translating results into actionable ship/revert decisions.",
+        "Performed model metric debugging via attribution/structure-shift analysis; identified optimization directions and improved filtering efficiency by 20%.",
+        "Built a real-time governance dashboard with automated SQL pipelines and multi-dimensional aggregation, reducing ad-hoc requests by 70%."
+      ]
+    },
+    {
+      period: "06/2024 - 08/2024",
+      company: "Tencent",
+      role: "Fintech Machine Learning Intern",
+      details: [
+        "Built a scalable time-series analysis pipeline (feature validation + robustness checks) to improve signal quality and model reliability.",
+        "Optimized forecasting models (LightGBM/Prophet/NeuralProphet) with automated lag/holiday features and rolling-window evaluation; reduced MAPE 14% → 7%.",
+        "Reduced processing latency by 67% (30s → 10s) through runtime optimization and production-oriented model comparison."
+      ]
+    },
+    {
+      period: "05/2022 - 01/2023",
+      company: "Wissee Technology",
+      role: "Data Scientist Intern — NLP & Analytics",
+      details: [
+        "Built an NLP pipeline (NER + sentiment) on 3,700+ posts to extract product/brand signals for trend detection and influencer profiling; contributed to 208% GMV lift.",
+        "Cleaned and analyzed 1,000+ pricing records and delivered Tableau insights supporting $100K+ budget allocation decisions."
+      ]
+    }
+  ]
+};
+
+
+        const { createApp, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                onMounted(() => {
+                    // 入场动画
+                    gsap.to(".hero-anim", {
+                        opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power4.out"
+                    });
+
+                    // 滚动触发
+                    gsap.registerPluginexperience(ScrollTrigger);
+                    document.querySelectorAll('.glass-bright').forEach(card => {
+                        gsap.from(card, {
+                            scrollTrigger: { trigger: card, start: "top bottom-=100" },
+                            y: 50, opacity: 0, duration: 1, ease: "power3.out"
+                        });
+                    });
+                });
+                return { profileData };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
